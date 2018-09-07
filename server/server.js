@@ -102,8 +102,10 @@ app.post('/users', (req, res) => {
   const body = _.pick(req.body, ['email', 'password']);
   const user = new User(body);
 
-  user.save().then((doc) => {
-    res.status(201).send(doc);
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).status(201).send(user);
   }).catch((err) => {
     res.status(400).send(err);
   });
