@@ -22,7 +22,7 @@ app.post('/todos', (req, res) => {
 
   todo.save().then((doc) => {
     res.status(201).send(doc);
-  }, (err) => {
+  }).catch((err) => {
     res.status(400).send(err);
   });
 });
@@ -30,7 +30,7 @@ app.post('/todos', (req, res) => {
 app.get('/todos', (req, res) => {
   Todo.find().then((todos) => {
     res.send({ todos });
-  }, (err) => {
+  }).catch((err) => {
     res.status(400).send(err);
   });
 });
@@ -93,6 +93,17 @@ app.patch('/todos/:id', (req, res) => {
     }
 
     res.send({ todo });
+  }).catch((err) => {
+    res.status(400).send(err);
+  });
+});
+
+app.post('/users', (req, res) => {
+  const body = _.pick(req.body, ['email', 'password']);
+  const user = new User(body);
+
+  user.save().then((doc) => {
+    res.status(201).send(doc);
   }).catch((err) => {
     res.status(400).send(err);
   });
