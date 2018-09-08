@@ -73,6 +73,28 @@ UserSchema.statics.findByToken = function (token) {
   });
 };
 
+// Model method (this = the model)
+UserSchema.statics.findByCredentials = function (email, password) {  
+  const User = this;
+  var user;
+  
+  return User.findOne({ email }).then((doc) => {
+    user = doc;
+
+    if (!user) {
+      return Promise.reject();
+    }
+ 
+    return bcrypt.compare(password, user.password);
+  }).then((result) => {
+    if (!result) {
+      return Promise.reject();
+    }
+
+    return Promise.resolve(user);
+  });
+};
+
 /*
   Middleware (also called pre and post hooks) are functions which
   are passed control during execution of asynchronous functions.
