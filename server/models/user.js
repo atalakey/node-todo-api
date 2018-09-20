@@ -52,6 +52,16 @@ UserSchema.methods.generateAuthToken = function () {
   return user.save().then(() => token);
 };
 
+// Instance method (this = the individual document)
+UserSchema.methods.removeToken = function (token) {
+  const user = this;
+
+  return user.updateOne({
+    // Remove all array elements that match the specified query
+    $pull: { tokens: { token } }
+  });
+};
+
 // Model method (this = the model)
 UserSchema.statics.findByToken = function (token) {  
   const User = this;
